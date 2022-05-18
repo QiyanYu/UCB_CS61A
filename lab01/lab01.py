@@ -1,5 +1,6 @@
 """Lab 1: Expressions and Control Structures"""
 
+
 def both_positive(a, b):
     """Returns True if both a and b are positive.
 
@@ -8,7 +9,8 @@ def both_positive(a, b):
     >>> both_positive(1, 1)
     True
     """
-    return a and b > 0 # You can replace this line!
+    return (a > 0) and (b > 0)  # You can replace this line!
+
 
 def sum_digits(x):
     """Sum all the digits of x.
@@ -24,6 +26,13 @@ def sum_digits(x):
     6
     """
     "*** YOUR CODE HERE ***"
+    sum = 0
+    while x > 0:
+        sum += x % 10
+        x //= 10
+
+    return sum
+
 
 def falling(n, k):
     """Compute the falling factorial of n to depth k.
@@ -38,6 +47,14 @@ def falling(n, k):
     1
     """
     "*** YOUR CODE HERE ***"
+    ret = 1
+    while k > 0:
+        ret *= n
+        n -= 1
+        k -= 1
+
+    return ret
+
 
 def double_eights(n):
     """Return true if n has two eights in a row.
@@ -55,3 +72,9 @@ def double_eights(n):
     False
     """
     "*** YOUR CODE HERE ***"
+    while n > 0:
+        if n % 100 == 88:
+            return True
+        n = n // 10
+
+    return False
