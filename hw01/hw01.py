@@ -1,6 +1,6 @@
 """ Homework 1: Control """
 
-from operator import add, floordiv, sub
+from operator import add, sub
 
 
 def a_plus_abs_b(a, b):
@@ -53,7 +53,6 @@ def largest_factor(x):
     >>> largest_factor(13) # factor is 1 since 13 is prime
     1
     """
-    "*** YOUR CODE HERE ***"
     fac = x - 1
     while fac > 0:
         if x % fac == 0:
@@ -134,7 +133,6 @@ def hailstone(x):
     >>> a
     7
     """
-    "*** YOUR CODE HERE ***"
     ret = 0
     while x > 1:
         print(x)
