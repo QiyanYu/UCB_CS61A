@@ -22,6 +22,19 @@ def roll_dice(num_rolls, dice=six_sided):
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    is_pig_out = False
+    total = 0
+    while num_rolls > 0:
+        dice_num = dice()
+        if dice_num == 1:
+            is_pig_out = True
+        num_rolls -= 1
+        total += dice_num
+
+    if is_pig_out:
+        total = 1
+
+    return total
     # END PROBLEM 1
 
 
@@ -33,6 +46,16 @@ def free_bacon(score):
     assert score < 100, 'The game should be over.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    cubed = score * score * score
+    total = 0
+    operand = -1
+    while cubed > 0:
+        digit = cubed % 10
+        operand *= -1
+        total += digit * operand
+        cubed //= 10
+
+    return abs(total) + 1
     # END PROBLEM 2
 
 
@@ -51,6 +74,11 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    else:
+        return roll_dice(num_rolls, dice)
+
     # END PROBLEM 3
 
 
@@ -60,6 +88,14 @@ def is_swap(player_score, opponent_score):
     """
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    num = 3 ** (player_score + opponent_score)
+    last_digit = num % 10
+    first_digit = num
+
+    while first_digit >= 10:
+        first_digit //= 10
+
+    return first_digit == last_digit
     # END PROBLEM 4
 
 
@@ -100,9 +136,35 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
-    # END PROBLEM 5
-    # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
-    # BEGIN PROBLEM 6
+    last_points_0 = 0
+    last_points_1 = 0
+    while score0 < goal and score1 < goal:
+        if who == 0:
+            num_rolls = strategy0(score0, score1)
+            points0 = take_turn(num_rolls, score1, dice)
+            score0 += points0
+            if feral_hogs:
+                if abs(last_points_0-num_rolls) == 2:
+                    score0 += 3
+                last_points_0 = points0
+            if is_swap(score0, score1):
+                score0, score1 = score1, score0
+        else:
+            num_rolls = strategy1(score1, score0)
+            points1 = take_turn(num_rolls, score0, dice)
+            score1 += points1
+            if feral_hogs:
+                if abs(last_points_1 - num_rolls) == 2:
+                    score1 += 3
+                last_points_1 = points1
+            if is_swap(score1, score0):
+                score0, score1 = score1, score0
+        who = other(who)
+
+        # END PROBLEM 5
+
+        # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
+        # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
     # END PROBLEM 6
     return score0, score1
@@ -117,6 +179,7 @@ def say_scores(score0, score1):
     """A commentary function that announces the score for each player."""
     print("Player 0 now has", score0, "and Player 1 now has", score1)
     return say_scores
+
 
 def announce_lead_changes(prev_leader=None):
     """Return a commentary function that announces lead changes.
@@ -142,6 +205,7 @@ def announce_lead_changes(prev_leader=None):
             print('Player', leader, 'takes the lead by', abs(score0 - score1))
         return announce_lead_changes(leader)
     return say
+
 
 def both(f, g):
     """Return a commentary function that says what f says, then what g says.
@@ -284,7 +348,6 @@ def run_experiments():
         print('final_strategy win rate:', average_win_rate(final_strategy))
 
     "*** You may add additional experiments as you wish ***"
-
 
 
 def bacon_strategy(score, opponent_score, margin=8, num_rolls=6):
