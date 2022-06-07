@@ -138,6 +138,7 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     "*** YOUR CODE HERE ***"
     last_points_0 = 0
     last_points_1 = 0
+    commentary = say
     while score0 < goal and score1 < goal:
         if who == 0:
             num_rolls = strategy0(score0, score1)
@@ -160,12 +161,11 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
             if is_swap(score1, score0):
                 score0, score1 = score1, score0
         who = other(who)
-
         # END PROBLEM 5
-
         # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
         # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
+        "*** YOUR CODE HERE ***"
+        commentary = commentary(score0, score1)
     # END PROBLEM 6
     return score0, score1
 
@@ -254,6 +254,15 @@ def announce_highest(who, prev_high=0, prev_score=0):
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    def say(score0, score1):
+        score = score0 if who == 0 else score1
+        gain = score - prev_score
+        high = prev_high
+        if gain > high:
+            high = gain
+            print(gain, 'point(s)! That\'s the biggest gain yet for Player', who)
+        return announce_highest(who, high, score)
+    return say
     # END PROBLEM 7
 
 
