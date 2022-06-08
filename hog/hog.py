@@ -302,6 +302,14 @@ def make_averaged(g, num_samples=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def strategy(*args):
+        total = 0
+        num = num_samples
+        while num > 0:
+            total += g(*args)
+            num -= 1
+        return total / num_samples
+    return strategy
     # END PROBLEM 8
 
 
@@ -316,6 +324,19 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    start = 1
+    end = 10
+    n = start
+    max_value = 0
+    num = 1
+    while n <= end:
+        average_dice = make_averaged(roll_dice, num_samples)
+        avg_value = average_dice(n, dice)
+        if avg_value > max_value:
+            max_value = avg_value
+            num = n
+        n += 1
+    return num
     # END PROBLEM 9
 
 
@@ -364,7 +385,10 @@ def bacon_strategy(score, opponent_score, margin=8, num_rolls=6):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Replace this statement
+    zero_dice = free_bacon(opponent_score)
+    if zero_dice >= margin:
+        return 0
+    return num_rolls  # Replace this statement
     # END PROBLEM 10
 
 
@@ -374,7 +398,13 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=6):
     non-beneficial swap. Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Replace this statement
+    zero_dice = free_bacon(opponent_score)
+    if is_swap(zero_dice+score, opponent_score):
+        if opponent_score > zero_dice + score:
+            return 0
+        return num_rolls
+        # Replace this statement
+    return bacon_strategy(score, opponent_score, margin, num_rolls)
     # END PROBLEM 11
 
 
@@ -384,7 +414,14 @@ def final_strategy(score, opponent_score):
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
-    return 6  # Replace this statement
+    if swap_strategy(score, opponent_score) != 0:
+        if score - opponent_score > 10:
+            return 1
+        elif score - opponent_score > 5:
+            return 2
+        else:
+            return 3
+    return 0  # Replace this statement
     # END PROBLEM 12
 
 ##########################
