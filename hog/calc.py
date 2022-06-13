@@ -1,4 +1,9 @@
 # this replaces the old hog_eval.py, which is kept around in case you want a local solution
+from urllib.parse import parse_qsl, urlencode, urlparse
+import webbrowser
+import time
+import logging
+import http.server
 import json
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -38,17 +43,11 @@ def main():
 # AUTHENTICATION #
 ################ #
 
+
 """
 Bacon OK integration: mostly ported from OK Client
 https://github.com/okpy/ok-client/blob/master/client/utils/auth.py
 """
-import http.server
-import json
-import logging
-import time
-import webbrowser
-from urllib.parse import parse_qsl, urlencode, urlparse
-from urllib.request import Request, urlopen
 
 log = logging.getLogger(__name__)
 
@@ -114,11 +113,13 @@ def _make_token_post(server, data):
     JSON response. If unsuccessful, raises an OAuthException.
     """
     try:
-        request = Request(server + TOKEN_ENDPOINT, bytes(urlencode(data), "utf-8"))
+        request = Request(server + TOKEN_ENDPOINT,
+                          bytes(urlencode(data), "utf-8"))
         body = json.loads(urlopen(request, timeout=TIMEOUT).read().decode())
     except Exception as e:
         log.warning("Other error when exchanging code", exc_info=True)
-        raise OAuthException(error="Authentication Failed", error_description=str(e))
+        raise OAuthException(error="Authentication Failed",
+                             error_description=str(e))
     if "error" in body:
         log.error(body)
         raise OAuthException(
@@ -266,13 +267,15 @@ class OAuthSession:
                 print("Authentication error")
         except OAuthException as e:
             with format.block("-"):
-                print("Authentication error: {}".format(e.error.replace("_", " ")))
+                print("Authentication error: {}".format(
+                    e.error.replace("_", " ")))
                 if e.error_description:
                     print(e.error_description)
         else:
             cur_time = int(time.time())
             self.expires_at = cur_time + expires_in
         return self.access_token
+
 
 if __name__ == '__main__':
     main()
