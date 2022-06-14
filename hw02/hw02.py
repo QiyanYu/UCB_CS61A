@@ -39,11 +39,9 @@ def product(n, f):
     162
     """
     "*** YOUR CODE HERE ***"
-    start = 1
-    total = 1
+    start, total = 1, 1
     while start <= n:
-        total *= f(start)
-        start += 1
+        total, start = total * f(start), start + 1
     return total
 
 
@@ -70,11 +68,9 @@ def accumulate(combiner, base, n, f):
     16
     """
     "*** YOUR CODE HERE ***"
-    ret = base
-    start = 1
+    ret, start = base, 1
     while start <= n:
-        ret = combiner(ret, f(start))
-        start += 1
+        ret, start = combiner(ret, f(start)), start + 1
     return ret
 
 
@@ -93,6 +89,7 @@ def summation_using_accumulate(n, f):
     True
     """
     "*** YOUR CODE HERE ***"
+    return accumulate(add, 0, n, f)
 
 
 def product_using_accumulate(n, f):
@@ -109,6 +106,7 @@ def product_using_accumulate(n, f):
     True
     """
     "*** YOUR CODE HERE ***"
+    return accumulate(mul, 1, n, f)
 
 
 def compose1(h, g):
@@ -134,6 +132,17 @@ def make_repeater(h, n):
     5
     """
     "*** YOUR CODE HERE ***"
+    return accumulate(compose1, identity, n, lambda x: h)
+
+    "*** regular solution: ***"
+    """
+    def f(x):
+        ret, start = x, 1
+        while start <= n:
+            ret, start = h(ret), start + 1
+        return ret
+    return f
+    """
 
 
 ##########################
