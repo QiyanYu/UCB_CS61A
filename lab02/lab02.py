@@ -155,3 +155,17 @@ def cycle(f1, f2, f3):
             return x
         return choose_f
     return ret_f
+
+    "*** USING LIST TO SIMPLIFY ***"
+    """
+    def ret_f(n):
+        def choose_f(x):
+            func_list = [f1, f2, f3]
+            i = 0
+            while i < n:
+                x = func_list[i%3](x)
+                i += i
+            return x
+        return choose_f
+    return ret_f
+    """
