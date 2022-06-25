@@ -1,8 +1,10 @@
+from operator import sub, mul
 HW_SOURCE_FILE = 'hw03.py'
 
 #############
 # Questions #
 #############
+
 
 def num_sevens(x):
     """Returns the number of times 7 appears as a digit of x.
@@ -26,6 +28,11 @@ def num_sevens(x):
     True
     """
     "*** YOUR CODE HERE ***"
+    if x < 10:
+        return 1 if x == 7 else 0
+    else:
+        return num_sevens(x // 10) + 1 if x % 10 == 7 else num_sevens(x // 10)
+
 
 def pingpong(n):
     """Return the nth element of the ping-pong sequence.
@@ -60,6 +67,31 @@ def pingpong(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(ret, i, factor):
+        if i == n:
+            return ret
+        elif num_sevens(i) > 0 or i % 7 == 0:
+            return helper(ret - factor, i + 1, factor * (-1))
+        else:
+            return helper(ret + factor, i + 1, factor)
+    return helper(1, 1, 1)
+
+
+# solution 2: go to the deepest of the recursion, then go back with related factor
+"""
+def pingpong(n):
+    return pingpong_helper(n)[0]
+
+def pingpong_helper(n):
+    if n < 7:
+        return n, 1
+    ret, fac = pingpong_helper(n-1)
+    ret += fac
+    if num_sevens(n) > 0 or n % 7 == 0:
+        fac *= -1
+    return ret, fac
+"""
+
 
 def count_change(total):
     """Return the number of ways to make change for total.
@@ -78,6 +110,15 @@ def count_change(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(n, m):
+        if n <= 0:
+            return 1
+        elif n < 2**m:
+            return 0
+        else:
+            return helper(n, m+1) + helper(n - 2**m, m)
+    return helper(total, 0)
+
 
 def missing_digits(n):
     """Given a number a that is in sorted, increasing order,
@@ -99,6 +140,12 @@ def missing_digits(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    all_but_last, last = n // 10, n % 10
+    if all_but_last <= 0:
+        return 0
+    ret = 0 if (last - all_but_last % 10) <= 1 else last - \
+        (all_but_last % 10) - 1
+    return ret + missing_digits(all_but_last)
 
 
 ###################
@@ -108,6 +155,7 @@ def missing_digits(n):
 def print_move(origin, destination):
     """Print instructions to move a disk."""
     print("Move the top disk from rod", origin, "to rod", destination)
+
 
 def move_stack(n, start, end):
     """Print the moves required to move n disks on the start pole to the end
@@ -138,8 +186,13 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        print_move(start, end)
+    else:
+        move_stack(n - 1, start, 6 - start - end)
+        print_move(start, end)
+        move_stack(n - 1, 6 - start - end, end)
 
-from operator import sub, mul
 
 def make_anonymous_factorial():
     """Return the value of an expression that computes factorial.
@@ -151,4 +204,4 @@ def make_anonymous_factorial():
     >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (lambda f: lambda n: f(f, n))(lambda f, n: 1 if n == 1 else n * f(f, n - 1))
