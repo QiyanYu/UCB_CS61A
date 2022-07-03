@@ -17,6 +17,12 @@ def choose(paragraphs, select, k):
     """
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    for p in paragraphs:
+        if select(p):
+            if k == 0:
+                return p
+            k -= 1
+    return ''
     # END PROBLEM 1
 
 
@@ -33,6 +39,13 @@ def about(topic):
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    def helper(x):
+        lst = split(remove_punctuation(lower(x)))
+        for l in lst:
+            if l in topic:
+                return True
+        return False
+    return helper
     # END PROBLEM 2
 
 
@@ -57,6 +70,13 @@ def accuracy(typed, reference):
     reference_words = split(reference)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    total, length = 0, len(typed_words)
+    if length == 0:
+        return 0.0
+    for i in range(len(reference_words)):
+        if i < length and reference_words[i] == typed_words[i]:
+            total += 1
+    return total / length * 100.0
     # END PROBLEM 3
 
 
@@ -65,6 +85,7 @@ def wpm(typed, elapsed):
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    return len(typed) / 5 * 60.0 / elapsed
     # END PROBLEM 4
 
 
@@ -92,20 +113,20 @@ def feline_fixes(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
     assert False, 'Remove this line'
 
-    if ______________: # Fill in the condition
+    if ______________:  # Fill in the condition
         # BEGIN
         "*** YOUR CODE HERE ***"
         # END
 
-    elif ___________: # Feel free to remove or add additional cases
+    elif ___________:  # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
         # END
 
     else:
         add_diff = ...  # Fill in these lines
-        remove_diff = ... 
-        substitute_diff = ... 
+        remove_diff = ...
+        substitute_diff = ...
         # BEGIN
         "*** YOUR CODE HERE ***"
         # END
@@ -171,10 +192,14 @@ def fastest_words(game):
 
 def game(words, times):
     """A data abstraction containing all words typed and their times."""
-    assert all([type(w) == str for w in words]), 'words should be a list of strings'
-    assert all([type(t) == list for t in times]), 'times should be a list of lists'
-    assert all([isinstance(i, (int, float)) for t in times for i in t]), 'times lists should contain numbers'
-    assert all([len(t) == len(words) for t in times]), 'There should be one word per time.'
+    assert all([type(w) == str for w in words]
+               ), 'words should be a list of strings'
+    assert all([type(t) == list for t in times]
+               ), 'times should be a list of lists'
+    assert all([isinstance(i, (int, float))
+               for t in times for i in t]), 'times lists should contain numbers'
+    assert all([len(t) == len(words) for t in times]
+               ), 'There should be one word per time.'
     return [words, times]
 
 
@@ -205,6 +230,7 @@ def game_string(game):
     """A helper function that takes in a game object and returns a string representation of it"""
     return "game(%s, %s)" % (game[0], game[1])
 
+
 enable_multiplayer = False  # Change to True when you
 
 
@@ -216,7 +242,7 @@ enable_multiplayer = False  # Change to True when you
 def run_typing_test(topics):
     """Measure typing speed and accuracy on the command line."""
     paragraphs = lines_from_file('data/sample_paragraphs.txt')
-    select = lambda p: True
+    def select(p): return True
     if topics:
         select = about(topics)
     i = 0
