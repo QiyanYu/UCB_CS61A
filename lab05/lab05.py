@@ -1,6 +1,8 @@
+from math import sqrt
 LAB_SOURCE_FILE = "lab05.py"
 
 """ Lab 05: Trees and Proj2 Prep """
+
 
 def couple(lst1, lst2):
     """Return a list that contains lists with i-th elements of two sequences
@@ -16,8 +18,12 @@ def couple(lst1, lst2):
     """
     assert len(lst1) == len(lst2)
     "*** YOUR CODE HERE ***"
+    ret = []
+    for l1, l2 in zip(lst1, lst2):
+        ret.append([l1, l2])
+    return ret
 
-from math import sqrt
+
 def distance(city1, city2):
     """
     >>> city1 = make_city('city1', 0, 1)
@@ -30,6 +36,10 @@ def distance(city1, city2):
     5.0
     """
     "*** YOUR CODE HERE ***"
+    lat1, lon1 = get_lat(city1), get_lon(city1)
+    lat2, lon2 = get_lat(city2), get_lon(city2)
+    return sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
+
 
 def closer_city(lat, lon, city1, city2):
     """
@@ -46,6 +56,8 @@ def closer_city(lat, lon, city1, city2):
     'Bucharest'
     """
     "*** YOUR CODE HERE ***"
+    return get_name(min([city1, city2], key=lambda x: distance(x, make_city('', lat, lon))))
+
 
 def check_abstraction():
     """
@@ -84,9 +96,10 @@ def make_city(name, lat, lon):
     1
     """
     if change_abstraction.changed:
-        return {"name" : name, "lat" : lat, "lon" : lon}
+        return {"name": name, "lat": lat, "lon": lon}
     else:
         return [name, lat, lon]
+
 
 def get_name(city):
     """
@@ -99,6 +112,7 @@ def get_name(city):
     else:
         return city[0]
 
+
 def get_lat(city):
     """
     >>> city = make_city('Berkeley', 0, 1)
@@ -109,6 +123,7 @@ def get_lat(city):
         return city["lat"]
     else:
         return city[1]
+
 
 def get_lon(city):
     """
@@ -121,8 +136,10 @@ def get_lon(city):
     else:
         return city[2]
 
+
 def change_abstraction(change):
     change_abstraction.changed = change
+
 
 change_abstraction.changed = False
 
@@ -145,6 +162,15 @@ def nut_finder(t):
     True
     """
     "*** YOUR CODE HERE ***"
+    if label(t) == 'nut':
+        return True
+    if is_leaf(t):
+        return False
+    for b in branches(t):
+        if nut_finder(b):
+            return True
+    return False
+
 
 def sprout_leaves(t, values):
     """Sprout new leaves containing the data in values at each leaf in
@@ -180,22 +206,30 @@ def sprout_leaves(t, values):
           2
     """
     "*** YOUR CODE HERE ***"
-
+    if is_leaf(t):
+        return tree(label(t), [tree(v) for v in values])
+    else:
+        return tree(label(t), [sprout_leaves(b, values) for b in branches(t)])
 
 # Tree ADT
+
+
 def tree(label, branches=[]):
     """Construct a tree with the given label value and a list of branches."""
     for branch in branches:
         assert is_tree(branch), 'branches must be trees'
     return [label] + list(branches)
 
+
 def label(tree):
     """Return the label value of a tree."""
     return tree[0]
 
+
 def branches(tree):
     """Return the list of branches of the given tree."""
     return tree[1:]
+
 
 def is_tree(tree):
     """Returns True if the given tree is a tree, and False otherwise."""
@@ -206,11 +240,13 @@ def is_tree(tree):
             return False
     return True
 
+
 def is_leaf(tree):
     """Returns True if the given tree's list of branches is empty, and False
     otherwise.
     """
     return not branches(tree)
+
 
 def print_tree(t, indent=0):
     """Print a representation of this tree in which each node is
@@ -234,6 +270,7 @@ def print_tree(t, indent=0):
     print('  ' * indent + str(label(t)))
     for b in branches(t):
         print_tree(b, indent + 1)
+
 
 def copy_tree(t):
     """Returns a copy of t. Only for testing purposes.
@@ -275,6 +312,7 @@ def add_chars(w1, w2):
     """
     "*** YOUR CODE HERE ***"
 
+
 def add_trees(t1, t2):
     """
     >>> numbers = tree(1,
@@ -313,6 +351,8 @@ def add_trees(t1, t2):
     "*** YOUR CODE HERE ***"
 
 # Shakespeare and Dictionaries
+
+
 def build_successors_table(tokens):
     """Return a dictionary: keys are words; values are lists of successors.
 
@@ -336,6 +376,7 @@ def build_successors_table(tokens):
         prev = word
     return table
 
+
 def construct_sent(word, table):
     """Prints a random sentence starting with word, sampling from
     table.
@@ -352,6 +393,7 @@ def construct_sent(word, table):
         "*** YOUR CODE HERE ***"
     return result.strip() + word
 
+
 def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com/shakespeare.txt'):
     """Return the words of Shakespeare's plays as a list."""
     import os
@@ -365,6 +407,7 @@ def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com
 # Uncomment the following two lines
 # tokens = shakespeare_tokens()
 # table = build_successors_table(tokens)
+
 
 def random_sent():
     import random
