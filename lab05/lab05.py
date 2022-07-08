@@ -1,4 +1,5 @@
 from math import sqrt
+from re import L
 LAB_SOURCE_FILE = "lab05.py"
 
 """ Lab 05: Trees and Proj2 Prep """
@@ -206,10 +207,16 @@ def sprout_leaves(t, values):
           2
     """
     "*** YOUR CODE HERE ***"
-    if is_leaf(t):
-        return tree(label(t), [tree(v) for v in values])
-    else:
-        return tree(label(t), [sprout_leaves(b, values) for b in branches(t)])
+    # if is_leaf(t):
+    #     branches_list = []
+    #     for v in values:
+    #         branches_list.append(tree(v))
+    #     return tree(label(t), branches_list)
+    # else:
+    #     branches_list = []
+    #     for b in branches(t):
+    #         branches_list.append(sprout_leaves(b, values))
+    # return tree(label(t), branches_list)
 
 # Tree ADT
 
@@ -311,6 +318,12 @@ def add_chars(w1, w2):
     True
     """
     "*** YOUR CODE HERE ***"
+    if len(w1) == 0:
+        return w2
+    elif w1[0] == w2[0]:
+        return add_chars(w1[1:], w2[1:])
+    else:
+        return w2[0] + add_chars(w1, w2[1:])
 
 
 def add_trees(t1, t2):
@@ -349,6 +362,16 @@ def add_trees(t1, t2):
       5
     """
     "*** YOUR CODE HERE ***"
+    label_add = label(t1) + label(t2)
+    branches1, branches2 = branches(t1), branches(t2)
+    if is_leaf(t1) or is_leaf(t2):
+        return tree(label_add, (branches1 + branches2))
+    else:
+        # zip() will stop at shortest list, so we need to add the difference
+        # of branches back
+        len1, len2 = len(branches1), len(branches2)
+        bran_diff = branches1[len2:] if len1 > len2 else branches2[len1:]
+        return tree(label_add, [add_trees(b1, b2) for b1, b2 in zip(branches1, branches2)] + bran_diff)
 
 # Shakespeare and Dictionaries
 
@@ -372,7 +395,9 @@ def build_successors_table(tokens):
     for word in tokens:
         if prev not in table:
             "*** YOUR CODE HERE ***"
+            table[prev] = []
         "*** YOUR CODE HERE ***"
+        table[prev].append(word)
         prev = word
     return table
 
@@ -391,6 +416,8 @@ def construct_sent(word, table):
     result = ''
     while word not in ['.', '!', '?']:
         "*** YOUR CODE HERE ***"
+        result += " " + word
+        word = random.choice(table[word])
     return result.strip() + word
 
 
