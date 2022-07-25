@@ -1,6 +1,7 @@
 """CS 61A presents Ants Vs. SomeBees."""
 
 import random
+from re import L
 from ucb import main, interact, trace
 from collections import OrderedDict
 
@@ -540,6 +541,11 @@ class Bee(Insect):
     # OVERRIDE CLASS ATTRIBUTES HERE
     is_watersafe = True
 
+    def __init__(self, armor, place=None):
+        super().__init__(armor, place)
+        self.scared = False
+        self.backwards = False
+
     def sting(self, ant):
         """Attack an ANT, reducing its armor by 1."""
         ant.reduce_armor(self.damage)
@@ -566,6 +572,15 @@ class Bee(Insect):
         # Extra credit: Special handling for bee direction
         # BEGIN EC
         "*** YOUR CODE HERE ***"
+        print("DEBUG", self.backwards, '--------------')
+        if self.backwards:
+
+            destination = self.place.entrance
+            if isinstance(destination, Hive):
+                destination = self.place
+        self.backwards = False
+
+        print("DEBUG", self.backwards, '=============')
         # END EC
         if self.blocked():
             self.sting(self.place.ant)
@@ -592,6 +607,10 @@ def make_slow(action, bee):
     """
     # BEGIN Problem EC
     "*** YOUR CODE HERE ***"
+    def slow_helper(gamestate):
+        if gamestate.time % 2 == 0:
+            return action(gamestate)
+    return slow_helper
     # END Problem EC
 
 
@@ -602,6 +621,12 @@ def make_scare(action, bee):
     """
     # BEGIN Problem EC
     "*** YOUR CODE HERE ***"
+
+    def scare_helper(gamestate):
+        print("DEBUG", "make scare ***************")
+        bee.backwards = True
+        return action(gamestate)
+    return scare_helper
     # END Problem EC
 
 
@@ -609,6 +634,17 @@ def apply_effect(effect, bee, duration):
     """Apply a status effect to a BEE that lasts for DURATION turns."""
     # BEGIN Problem EC
     "*** YOUR CODE HERE ***"
+    old_action = bee.action
+    effected_action = effect(old_action, bee)
+
+    def action(gamestate):
+        nonlocal duration
+        if duration > 0:
+            effected_action(gamestate)
+            duration -= 1
+        else:
+            old_action(gamestate)
+    bee.action = action
     # END Problem EC
 
 
@@ -618,7 +654,7 @@ class SlowThrower(ThrowerAnt):
     name = 'Slow'
     food_cost = 4
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
@@ -632,12 +668,15 @@ class ScaryThrower(ThrowerAnt):
     name = 'Scary'
     food_cost = 6
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        if target and not target.scared:
+            apply_effect(make_scare, target, 2)
+            target.scared = True
         # END Problem EC
 
 
