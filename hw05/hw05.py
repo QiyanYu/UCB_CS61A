@@ -39,6 +39,36 @@ class VendingMachine:
     """
     "*** YOUR CODE HERE ***"
 
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+        self.stock = 0
+        self.balance = 0
+
+    def vend(self):
+        if self.stock <= 0:
+            return ("Machine is out of stock.")
+        elif self.balance < self.price:
+            return ('You must add ${0} more funds.'.format(self.price - self.balance))
+        elif self.balance == self.price:
+            self.balance = 0
+            self.stock -= 1
+            return ('Here is your {0}.'.format(self.name))
+        else:
+            b, self.balance = self.balance - self.price, 0
+            self.stock -= 1
+            return ('Here is your {0} and ${1} change.'.format(self.name, b))
+
+    def add_funds(self, balance):
+        if self.stock <= 0:
+            return ('Machine is out of stock. Here is your ${0}.'.format(balance))
+        self.balance += balance
+        return ('Current balance: ${0}'.format(self.balance))
+
+    def restock(self, amount):
+        self.stock += amount
+        return ('Current {0} stock: {1}'.format(self.name, self.stock))
+
 
 def preorder(t):
     """Return a list of the entries in this tree in the order that they
@@ -51,6 +81,12 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return [t.label]
+    ret = [t.label]
+    for b in t.branches:
+        ret += preorder(b)
+    return ret
 
 
 def store_digits(n):
@@ -65,6 +101,11 @@ def store_digits(n):
     Link(8, Link(7, Link(6)))
     """
     "*** YOUR CODE HERE ***"
+    res = Link.empty
+    while n > 0:
+        res = Link(n % 10, res)
+        n //= 10
+    return res
 
 
 def generate_paths(t, value):
@@ -103,11 +144,12 @@ def generate_paths(t, value):
     """
 
     "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
-
-            "*** YOUR CODE HERE ***"
+    if t.label == value:
+        yield [t.label]
+    for bran in t.branches:
+        for b in generate_paths(bran, value):
+            yield [t.label] + b
+    "*** YOUR CODE HERE ***"
 
 # Optional Questions
 
