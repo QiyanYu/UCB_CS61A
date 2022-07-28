@@ -149,7 +149,6 @@ def generate_paths(t, value):
     for bran in t.branches:
         for b in generate_paths(bran, value):
             yield [t.label] + b
-    "*** YOUR CODE HERE ***"
 
 # Optional Questions
 
@@ -180,6 +179,23 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
+    def bst_min(t):
+        if t.is_leaf():
+            return t.label
+        return min(bst_min(t.branches[0]), t.label)
+
+    def bst_max(t):
+        if t.is_leaf():
+            return t.label
+        return max(bst_max(t.branches[-1]), t.label)
+
+    if t.is_leaf():
+        return True
+    elif len(t.branches) == 1:
+        one_leaf = t.branches[0]
+        return bst_min(one_leaf) > t.label or bst_max(one_leaf) <= t.label and is_bst(one_leaf)
+    else:
+        return bst_min(t.branches[1]) > t.label and bst_max(t.branches[0]) <= t.label and is_bst(t.branches[0]) and is_bst(t.branches[1])
 
 
 class Mint:
@@ -219,17 +235,22 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = Mint.current_year
 
 
 class Coin:
+    cents = 0
+
     def __init__(self, year):
         self.year = year
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        return self.cents + max(0, Mint.current_year - self.year - 50)
 
 
 class Nickel(Coin):
@@ -258,6 +279,13 @@ def remove_all(link, value):
     <0 1>
     """
     "*** YOUR CODE HERE ***"
+    prev, curr = link, link.rest
+    while curr is not Link.empty:
+        if curr.first == value:
+            prev.rest = curr.rest
+        else:
+            prev = curr
+        curr = curr.rest
 
 
 def deep_map(f, link):
@@ -274,6 +302,14 @@ def deep_map(f, link):
     <<2 <4 6> 8> <<10>>>
     """
     "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return Link.empty
+    if isinstance(link.first, Link):
+        first = deep_map(f, link.first)
+    else:
+        first = f(link.first)
+    return Link(first, deep_map(f, link.rest))
+
 
 ## Link Class ##
 
