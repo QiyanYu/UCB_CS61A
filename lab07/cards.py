@@ -1,11 +1,12 @@
 # All cards available in a standard deck.
 from classes import *
 
-#TAs
+# TAs
 aaron = TACard('Baron Aaron', 2100, 1300)
 addison = TACard('Addison, from operator import add', 1000, 2000)
 albert = TACard('Albert, Lethargy Incarnate', 1000, 2000)
-alex_k = TACard('Alex, Skipper of Labs and Preparer for Exams', 2293.141593, 1111.11111)
+alex_k = TACard('Alex, Skipper of Labs and Preparer for Exams',
+                2293.141593, 1111.11111)
 alex_s = TACard('President Lieutenant Stennet for Senate', 1400, 2000)
 aman = TACard('Aman', 1000, 2100)
 amrita = TACard('Amrita, the Pun-stoppable', 1800, 1450)
@@ -35,11 +36,12 @@ shayna = TACard('Shayna, Procrastinator Supreme', 1916, 1459)
 yannan = TACard('Yannan, the Yammeister', 1500, 1900)
 yichen = TACard('Yichen, Drinker of Boba', 1800, 1500)
 
-#Tutors
+# Tutors
 christine = TutorCard('Christine', 1500, 1700)
-ethan = TutorCard('Ethan, Pillar of the Demon Slayer Corps', 1800 , 1100)
+ethan = TutorCard('Ethan, Pillar of the Demon Slayer Corps', 1800, 1100)
 grant = TutorCard('Grant', 1100, 2100)
-ivan = TutorCard('Ivan, the ender of dreaming the starter of scheming', 1900, 2300)
+ivan = TutorCard(
+    'Ivan, the ender of dreaming the starter of scheming', 1900, 2300)
 jason = TutorCard('Jason, Counter of Chang-e', 1500, 1900)
 jemmy = TutorCard('Jemmy, the Joker', 1200, 1700)
 jessica = TutorCard('Jessica, Lover of Shin Ramen', 1528, 2154)
@@ -50,13 +52,13 @@ nikhita = TutorCard('Nikhita, Always Schemin', 1700, 1700)
 uma = TutorCard('Uma, Hoarder of Hydroflasks', 1200, 1700)
 
 
-
-
 # Professors
-denero = ProfessorCard('John DeNero, Protector of Abstraction Barriers', 5000, 5000)
+denero = ProfessorCard(
+    'John DeNero, Protector of Abstraction Barriers', 5000, 5000)
 
 # A standard deck contains all standard cards.
-standard_cards = [denero, aaron, addison ,albert ,alex_k ,alex_s ,aman ,amrita ,annie ,audrey ,brandon ,catherine ,cesar ,chae ,charles ,dalton ,danelle ,derek ,derrick ,griffin ,jack ,jade ,kavi ,lillian ,nancy ,patricia ,paul ,regina ,richard ,sean ,shayna ,yannan ,yichen ,ethan ,grant ,ivan ,jason ,jemmy ,jessica ,lauren ,matthew ,nicholas ,nikhita ,uma]
+standard_cards = [denero, aaron, addison, albert, alex_k, alex_s, aman, amrita, annie, audrey, brandon, catherine, cesar, chae, charles, dalton, danelle, derek, derrick, griffin,
+                  jack, jade, kavi, lillian, nancy, patricia, paul, regina, richard, sean, shayna, yannan, yichen, ethan, grant, ivan, jason, jemmy, jessica, lauren, matthew, nicholas, nikhita, uma]
 standard_deck = Deck(standard_cards)
 
 # The player and opponent's decks are the standard deck by default.

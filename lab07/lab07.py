@@ -2,7 +2,6 @@
 
 
 # Linked Lists
-
 def link_to_list(link):
     """Takes a linked list and returns a Python list with the same elements.
 
@@ -13,10 +12,12 @@ def link_to_list(link):
     []
     """
     "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return []
+    return [link.first] + link_to_list(link.rest)
+
 
 # Trees
-
-
 def cumulative_mul(t):
     """Mutates t so that each node's label becomes the product of all labels in
     the corresponding subtree rooted at t.
@@ -27,10 +28,14 @@ def cumulative_mul(t):
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
     "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return
+    for b in t.branches:
+        cumulative_mul(b)
+        t.label *= b.label
+
 
 # Link List Class
-
-
 class Link:
     """A linked list.
 
@@ -71,9 +76,9 @@ class Link:
             string += str(self.first) + ' '
             self = self.rest
         return string + str(self.first) + '>'
+
+
 # Tree ADT
-
-
 class Tree:
     """
     >>> t = Tree(3, [Tree(2, [Tree(5)]), Tree(4)])
